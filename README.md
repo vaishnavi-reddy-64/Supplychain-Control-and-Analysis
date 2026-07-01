@@ -56,4 +56,54 @@ To stabilize the transit network and mitigate financial loss, the following oper
 * **Data Visualization & BI:** Microsoft Power BI.
 * **Metrics & Calculations:** DAX (Data Analysis Expressions) for custom delay duration and financial loss modeling.
 
+---
 
+## 🤖 Machine Learning & Predictive Analytics
+
+An end-to-end predictive and risk-monitoring pipeline was built to proactively flag supply chain vulnerabilities before shipments depart. This predictive engine is designed as a modular core, optimized to feed live automated predictions into future backend applications and decentralized networks.
+
+### 🧠 The Core Engine: XGBoost Classifier
+To handle complex, non-linear relationships in logistics (such as supplier habits, location bottlenecks, and carrier speeds), the pipeline utilizes an **XGBoost Classifier**. 
+
+* **How it Works:** Instead of making isolated guesses, the model relies on gradient-boosted decision trees. It builds trees sequentially, forcing each new tree to analyze and correct the specific prediction mistakes made by the previous ones.
+* **Performance:** The model achieved a **stable overall accuracy of 81.60%** on the structural baseline data, establishing a highly dependable engine for live production testing.
+* **Feature Scope:** The model was trained across 13 engineered features, carefully omitting post-trip data columns (like `actual_transit_days` or `delay_days`) to eliminate data leakage and guarantee true forecasting capability.
+
+### 🛡️ Fraud & Anomaly Detection: Isolation Forest
+To secure future data ledger inputs from corrupted, manual, or highly unusual entry, an **Isolation Forest** algorithm was trained concurrently. It operates as an automated gatekeeper, isolating anomalous data points deep within tree paths and flagging them as suspicious (`-1`) based on transaction attributes like shipment quantities and timing anomalies.
+
+---
+
+## 📦 Generated ML Artifacts (Production Assets)
+
+The machine learning training pipeline compiles all analytical data intelligence into **three standalone serialization binary files (`.pkl`)**. These components are saved locally and are fully prepared for integration into a future FastAPI/Flask backend or smart contract pipeline:
+
+1. **`delay_predictor_model.pkl`**
+   * **Purpose:** The optimized mathematical "brain" of the trained XGBoost model.
+   * **Integration Role:** Can be deserialized live by a server to process incoming shipment details and return an immediate risk evaluation (`[0]` for On-Time, `[1]` for Delayed).
+2. **`anomaly_detector_model.pkl`**
+   * **Purpose:** The structural cluster boundaries calculated by the Isolation Forest.
+   * **Integration Role:** Evaluates the statistical plausibility of a shipment's metrics to catch malicious or erroneous entries before data is saved.
+3. **`model_features.pkl`**
+   * **Purpose:** A clean Python list mapping the exact structure, name, and sequence of the 13 training features.
+   * **Integration Role:** Functions as a strict input template, forcing real-time user requests to map cleanly into numerical inputs without crashing the predictive model.
+
+---
+
+
+## 📈 Current Project Status & Future Extension
+
+This repository represents the complete **Data Science and Machine Learning Foundation** for the supply chain monitoring project. All objectives for this phase have been successfully met, including data cleaning, exploratory analysis, and the training/exporting of the predictive modeling assets.
+
+### 🏁 Milestones Achieved in this Repository:
+* **Exploratory Data Analysis (EDA):** Discovered critical supply chain patterns and bottlenecks (such as seasonal constraints and supplier profiles).
+* **Predictive Pipeline:** Built an XGBoost model achieving a stable **81.60% overall baseline accuracy** to predict incoming shipment delay risks.
+* **Security Verification:** Implemented an Isolation Forest engine to automatically screen data entries for operational anomalies.
+* **Production Hand-off:** Successfully compiled and exported the three standalone tracking assets (`delay_predictor_model.pkl`, `anomaly_detector_model.pkl`, and `model_features.pkl`).
+
+### 🚀 Next Steps: The Blockchain Extension
+To maintain a modular code architecture, the integration of these machine learning engines into a live ecosystem is handled in a separate repository. 
+
+The upcoming extension phase wraps these exported `.pkl` files into a live **FastAPI backend** and links them directly to a **decentralized blockchain smart contract network**. This allows the models to evaluate shipments in real-time at the exact moment of dispatch, permanently logging predictive risk metadata and anomaly alerts onto an immutable ledger. 
+
+*For the complete end-to-end decentralized application code, smart contracts, and live API deployment scripts, please see the [Supply Chain Blockchain Extension Repository](https://github.com/your-username/your-blockchain-repo-name).*
